@@ -1,0 +1,12 @@
+# Nutzen der schlanken Java 21 Laufzeitumgebung (JRE)
+FROM eclipse-temurin:21-jre-jammy
+
+# Arbeitsverzeichnis im Container erstellen
+WORKDIR /app
+
+# Die fertig gebaute JAR-Datei aus dem target-Ordner in den Container kopieren
+# Hinweis: Passe den Namen 'unterprojekt-1.jar' an den echten Namen deiner JAR an!
+COPY target/benuterverwaltung-1.jar lagerverwaltung.jar
+
+# Befehl zum Starten der Java-Anwendung
+ENTRYPOINT ["java", "-jar", "lagerverwaltung.jar"]

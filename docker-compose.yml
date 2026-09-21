@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # --- UNTERPROJEKT 1 (z. B. dein API-Backend) ---
+  unterprojekt-1:
+    build:
+      context: ./benutzerverwaltung # Pfad zum Ordner des 1. Unterprojekts
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081" # Öffnet Port 8081 nach außen
+    restart: always # Startet die App automatisch neu bei Abstürzen oder Server-Neustart
+    environment:
+      - SPRING_PROFILES_ACTIVE=test # Falls du Spring Boot nutzt
+
+  # --- UNTERPROJEKT 2 (z. B. ein weiteres Backend-Modul) ---
+  unterprojekt-2:
+    build:
+      context: ./lagerverwaltung-core
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    restart: always
+    depends_on:
+      - lagerverwaltung-core # Startet erst, wenn Unterprojekt 1 läuft
+
+  # --- UNTERPROJEKT 3 (z. B. ein Web-Frontend oder Worker) ---
+  unterprojekt-3:
+    build:
+      context: ./lagerverwaltung-web
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - lagerverwaltung-core
