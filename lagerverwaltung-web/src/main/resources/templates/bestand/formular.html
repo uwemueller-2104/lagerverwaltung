@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bestand anlegen/korrigieren</title>
+</head>
+<body>
+    <h1 th:text="${bestand.id} != null ? 'Bestand korrigieren' : 'Bestand direkt anlegen'">Bestand</h1>
+
+    <form th:action="@{/bestand/speichern}" th:object="${bestand}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label>Material</label><br/>
+            <select name="materialId" required>
+                <option th:each="m : ${materialOptionen}"
+                        th:value="${m.id}"
+                        th:text="${m.name}"
+                        th:selected="${bestand.material != null and bestand.material.id == m.id}">
+                </option>
+            </select>
+        </div>
+        <div>
+            <label>Lagerplatz</label><br/>
+            <select name="lagerplatzId" required>
+                <option th:each="lp : ${lagerplatzOptionen}"
+                        th:value="${lp.id}"
+                        th:text="${lp.lager.name} + ' – ' + ${lp.bezeichnung}"
+                        th:selected="${bestand.lagerplatz != null and bestand.lagerplatz.id == lp.id}">
+                </option>
+            </select>
+        </div>
+        <div>
+            <label>Menge</label><br/>
+            <input type="number" step="0.01" th:field="*{menge}" required />
+        </div>
+
+        <p>
+            <button type="submit">Speichern</button>
+            <a th:href="@{/bestand}">Abbrechen</a>
+        </p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Buchungen</title>
+</head>
+<body>
+    <h1>Buchungen</h1>
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Zeitpunkt</th>
+                <th>Typ</th>
+                <th>Material</th>
+                <th>Lagerplatz</th>
+                <th>Benutzer</th>
+                <th>Menge</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="b : ${buchungListe}">
+                <td th:text="${b.zeitpunkt}">Zeitpunkt</td>
+                <td th:text="${b.typ}">Typ</td>
+                <td th:text="${b.material.name}">Material</td>
+                <td th:text="${b.lagerplatz.bezeichnung}">Lagerplatz</td>
+                <td th:text="${b.benutzer.anzeigename}">Benutzer</td>
+                <td th:text="${b.menge}">0</td>
+                <td>
+                    <a th:href="@{/buchung/{id}/bearbeiten(id=${b.id})}">Bearbeiten</a>
+                    <form th:action="@{/buchung/{id}/loeschen(id=${b.id})}" method="post" style="display:inline"
+                          onsubmit="return confirm('Buchung wirklich löschen? Der Bestand wird dadurch NICHT automatisch angepasst.');">
+                        <button type="submit">Löschen</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><a th:href="@{/buchung/neu}">+ Neue Buchung (Ein-/Ausbuchen)</a></p>
+    <p><a th:href="@{/}">Zurück zur Startseite</a></p>
+</body>
+</html>

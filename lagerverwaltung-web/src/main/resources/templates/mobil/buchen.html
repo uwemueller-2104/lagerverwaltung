@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Buchen – Mobil</title>
+    <style>
+        body { font-family: -apple-system, "Segoe UI", sans-serif; background: #F5F3EF; color: #21201D;
+               margin: 0; padding: 16px; font-size: 17px; }
+        h1 { font-size: 20px; }
+        label { display: block; margin-top: 14px; font-size: 14px; color: #847E71; }
+        select, input { width: 100%; padding: 12px; font-size: 17px; border-radius: 8px;
+                        border: 1px solid #DCD6C9; box-sizing: border-box; margin-top: 4px; }
+        button { width: 100%; padding: 16px; font-size: 18px; font-weight: 600; color: white;
+                 background: #C97A2B; border: none; border-radius: 10px; margin-top: 20px; }
+        .meldung-erfolg { background: #DCE7D8; color: #3D6B36; padding: 10px; border-radius: 8px; }
+        .meldung-fehler { background: #F4E3C9; color: #8A5A17; padding: 10px; border-radius: 8px; }
+        a.zurueck { display: inline-block; margin-top: 16px; color: #57524A; }
+    </style>
+</head>
+<body>
+    <h1>Material buchen</h1>
+
+    <p class="meldung-erfolg" th:if="${erfolg}" th:text="${erfolg}"></p>
+    <p class="meldung-fehler" th:if="${fehler}" th:text="${fehler}"></p>
+
+    <button type="button" id="scan-button" style="background:#57524A;color:white;border:none;
+            border-radius:10px;padding:14px;font-size:17px;width:100%;">📷 Barcode/QR scannen</button>
+    <div id="reader" style="width:100%;margin-top:10px;display:none;"></div>
+    <p id="scan-meldung" style="display:none;padding:10px;border-radius:8px;font-size:15px;"></p>
+
+    <form th:action="@{/mobil/buchen}" method="post">
+        <label>Typ</label>
+        <select name="typ" required>
+            <option th:each="t : ${typOptionen}" th:value="${t}" th:text="${t}"></option>
+        </select>
+
+        <label>Material</label>
+        <select name="materialId" id="material-select" required>
+            <option th:each="m : ${materialOptionen}" th:value="${m.id}" th:text="${m.name}"></option>
+        </select>
+
+        <label>Lagerplatz</label>
+        <select name="lagerplatzId" required>
+            <option th:each="lp : ${lagerplatzOptionen}" th:value="${lp.id}"
+                    th:text="${lp.lager.name} + ' – ' + ${lp.bezeichnung}"></option>
+        </select>
+
+        <label>Benutzer</label>
+        <select name="benutzerId" required>
+            <option th:each="b : ${benutzerOptionen}" th:value="${b.id}" th:text="${b.anzeigename}"></option>
+        </select>
+
+        <label>Menge</label>
+        <input type="number" step="0.01" name="menge" required />
+
+        <button type="submit">Buchen</button>
+    </form>
+
+    <a class="zurueck" th:href="@{/mobil}">← Zurück</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        // html5-qrcode liest sowohl QR-Codes als auch gaengige 1D-Barcodes
+        // (EAN, CODE_128 etc.) ueber die Handykamera.
+        let html5QrCode;
+
+        document.getElementById('scan-button').addEventListener('click', function () {
+            const reader = document.getElementById('reader');
+            reader.style.display = 'block';
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                onScanErfolg
+            ).catch(function (err) {
+                zeigeScanMeldung('Kamera konnte nicht gestartet werden: ' + err, true);
+            });
+        });
+
+        function onScanErfolg(decodedText) {
+            html5QrCode.stop().then(function () {
+                document.getElementById('reader').style.display = 'none';
+                fetch('/api/material/barcode/' + encodeURIComponent(decodedText))
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('nicht gefunden');
+                        }
+                        return response.json();
+                    })
+                    .then(function (material) {
+                        document.getElementById('material-select').value = material.id;
+                        zeigeScanMeldung('Erkannt: ' + material.name, false);
+                    })
+                    .catch(function () {
+                        zeigeScanMeldung('Kein Material für Code "' + decodedText + '" gefunden.', true);
+                    });
+            });
+        }
+
+        function zeigeScanMeldung(text, istFehler) {
+            const el = document.getElementById('scan-meldung');
+            el.textContent = text;
+            el.style.display = 'block';
+            el.style.background = istFehler ? '#F4E3C9' : '#DCE7D8';
+            el.style.color = istFehler ? '#8A5A17' : '#3D6B36';
+        }
+    </script>
+</body>
+</html>

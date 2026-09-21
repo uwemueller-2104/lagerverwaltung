@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lagerplatz anlegen/bearbeiten</title>
+</head>
+<body>
+    <h1 th:text="${lagerplatz.id} != null ? 'Lagerplatz bearbeiten' : 'Neuer Lagerplatz'">Lagerplatz</h1>
+
+    <form th:action="@{/lagerplatz/speichern}" th:object="${lagerplatz}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label>Lager</label><br/>
+            <select name="lagerId" required>
+                <option th:each="l : ${lagerOptionen}"
+                        th:value="${l.id}"
+                        th:text="${l.name}"
+                        th:selected="${lagerplatz.lager != null and lagerplatz.lager.id == l.id}">
+                </option>
+            </select>
+        </div>
+        <div>
+            <label>Bezeichnung</label><br/>
+            <input type="text" th:field="*{bezeichnung}" placeholder="z.B. Regal A3" required />
+        </div>
+
+        <p>
+            <button type="submit">Speichern</button>
+            <a th:href="@{/lagerplatz}">Abbrechen</a>
+        </p>
+    </form>
+</body>
+</html>

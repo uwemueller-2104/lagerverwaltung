@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.4</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>de.web192.lagersoftware</groupId>
+  <artifactId>lagersoftware</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Lagersoftware</name>
+  <description>Prototyp einer Lagersoftware fuer eine Handwerksfirma (Version 0.1, ohne KI-Anbindung)</description>
+
+  <properties>
+    <java.version>21</java.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <!--
+    Modul-Aufteilung nach der 3-Schichten-Architektur:
+    - benutzerverwaltung    -> wiederverwendbares Modul fuer Benutzer & Rollen
+    - lagerverwaltung-core  -> Geschaeftslogik- und Datenzugriffsschicht (Material, Lagerplaetze, Buchungen)
+    - lagerverwaltung-web   -> Praesentationsschicht (Verwaltungs-GUI + mobile Ansicht), lauffaehige Spring-Boot-App
+  -->
+  <modules>
+    <module>benutzerverwaltung</module>
+    <module>lagerverwaltung-core</module>
+    <module>lagerverwaltung-web</module>
+  </modules>
+
+</project>

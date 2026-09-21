@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lager verwalten</title>
+</head>
+<body>
+    <h1>Lager</h1>
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Ort</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="lager : ${lagerListe}">
+                <td th:text="${lager.name}">Name</td>
+                <td th:text="${lager.ort}">Ort</td>
+                <td>
+                    <a th:href="@{/lager/{id}/bearbeiten(id=${lager.id})}">Bearbeiten</a>
+                    <form th:action="@{/lager/{id}/loeschen(id=${lager.id})}" method="post" style="display:inline"
+                          onsubmit="return confirm('Lager wirklich löschen?');">
+                        <button type="submit">Löschen</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><a th:href="@{/lager/neu}">+ Neues Lager anlegen</a></p>
+    <p><a th:href="@{/}">Zurück zur Startseite</a></p>
+</body>
+</html>

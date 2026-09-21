@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bestand – Mobil</title>
+    <style>
+        body { font-family: -apple-system, "Segoe UI", sans-serif; background: #F5F3EF; color: #21201D;
+               margin: 0; padding: 16px; font-size: 17px; }
+        h1 { font-size: 20px; }
+        .karte { background: white; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+                 box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .karte .name { font-weight: 600; }
+        .karte .details { color: #847E71; font-size: 15px; margin-top: 4px; }
+        .warnung { color: #8A5A17; font-size: 14px; margin-top: 4px; }
+        a.zurueck { display: inline-block; margin-top: 16px; color: #57524A; }
+    </style>
+</head>
+<body>
+    <h1>Bestand</h1>
+
+    <div class="karte" th:each="b : ${bestandListe}">
+        <div class="name" th:text="${b.material.name}">Material</div>
+        <div class="details" th:text="${b.lagerplatz.lager.name} + ' – ' + ${b.lagerplatz.bezeichnung} + ': ' + ${b.menge} + ' ' + ${b.material.einheit}">
+            Details
+        </div>
+        <div class="warnung" th:if="${b.menge <= b.material.mindestbestand}">
+            Nachbestellen (Mindestbestand: <span th:text="${b.material.mindestbestand}">0</span>
+            <span th:text="${b.material.einheit}"></span>)
+        </div>
+    </div>
+
+    <a class="zurueck" th:href="@{/mobil}">← Zurück</a>
+</body>
+</html>
