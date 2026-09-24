@@ -36,6 +36,8 @@ Aufgeteilt nach der 3-Schichten-Architektur:
     formular mit Kamera-Scan (Barcode/QR ueber `html5-qrcode`), das
     gescannte Material automatisch per REST-Endpunkt
     `/api/material/barcode/{code}` im Formular auswaehlt.
+  - Login (lokal, Benutzername/Passwort) mit rollenbasierter Zugriffs-
+    steuerung ueber Spring Security, siehe Abschnitt "Login" unten.
 
 ## Starten
 
@@ -61,6 +63,38 @@ bitte einmal löschen (einfach den Ordner `data/` entfernen), bevor du
 `mvn spring-boot:run` startest. Flyway erwartet beim ersten Lauf ein leeres
 Schema und legt es dann selbst per `V1__initial_schema.sql` neu an;
 `TestdatenInitializer` füllt die Beispieldaten danach automatisch wieder.
+
+## Login
+
+Die Anwendung verlangt jetzt eine Anmeldung (Spring Security, Formular-Login
+unter `/login`). Es gibt noch keine eigene Benutzerverwaltungs-Oberfläche –
+Benutzer landen bisher nur über `TestdatenInitializer` in der Datenbank.
+Zwei Beispiel-Logins stehen nach dem ersten Start zur Verfügung:
+
+| Benutzername | Passwort      | Rolle       |
+|--------------|---------------|-------------|
+| `admin`      | `admin123`    | ADMIN       |
+| `monteur1`   | `monteur123`  | MITARBEITER |
+
+**Nur zum Ausprobieren auf dem eigenen Rechner** – vor einem echten Einsatz
+unbedingt eigene Zugangsdaten setzen (z. B. direkt in der H2-Konsole den
+`passwort_hash` durch einen selbst erzeugten BCrypt-Hash ersetzen, oder eine
+kleine Admin-Seite zum Anlegen/Ändern von Benutzern nachziehen).
+
+Rollen und Rechte (siehe `Rolle.java`):
+- **ADMIN**: darf zusätzlich Stammdaten bearbeiten – Lager, Lagerplätze,
+  Material, Projekte, Angebote, Lieferscheine.
+- **MITARBEITER**: darf alles ansehen sowie Bestand ein-/ausbuchen
+  (Verwaltungs-GUI und mobile Ansicht), aber keine Stammdaten anlegen oder
+  ändern. Ruft er/sie trotzdem eine Stammdaten-Seite auf, kommt eine
+  403-Fehlerseite; die entsprechenden Menüpunkte sind für MITARBEITER
+  in der Navigation deshalb von vornherein ausgeblendet.
+
+**Geplant, noch nicht umgesetzt:** Microsoft Entra ID (OIDC) als zweite
+Login-Möglichkeit neben dem lokalen Login. Der lokale Login bleibt dabei
+als Fallback bestehen, die Rollenzuweisung für neue Microsoft-Benutzer
+erfolgt weiterhin manuell in der App, und es ist nur Single-Tenant (nur
+für die eigene Firma) geplant – siehe Backlog unten.
 
 ## HTTPS für den Kamera-Scan vom Handy
 
@@ -135,4 +169,6 @@ Projekt-Setup steht: Module, Entities, Repositories. Als naechstes gemeinsam:
 - [ ] Unit-Tests für `AngebotService.importieren(...)` (Copy&Paste-Parsing, inkl. "Material nicht gefunden"-Fall)
 - [ ] Unit-Tests für `LieferscheinService.anlegen(...)` (löst Einbuchung mit Projektbezug aus)
 - [ ] Mobile Ausbuchung um optionale Projekt-Zuordnung erweitern (Baustelle wählen)
-- [ ] Login/Berechtigungen auf Basis von `Benutzer`/`Rolle` (geplant: Microsoft Entra ID + lokaler Fallback, siehe Chat-Verlauf)
+- [x] Lokaler Login (Benutzername/Passwort) mit rollenbasierter Zugriffssteuerung (Spring Security, BCrypt, siehe Abschnitt "Login")
+- [ ] Eigene Oberfläche zum Anlegen/Bearbeiten von Benutzern (bisher nur über `TestdatenInitializer`)
+- [ ] Microsoft Entra ID (OIDC) als zweite Login-Möglichkeit neben dem lokalen Login (lokaler Login bleibt als Fallback, Rollenzuweisung weiterhin manuell in der App, Single-Tenant – siehe Chat-Verlauf für die Skizze)

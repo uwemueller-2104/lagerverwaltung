@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Anmelden – Lagersoftware</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <style>
+        /* Login-Seite hat bewusst keine Navigation - eigenes, zentriertes Layout. */
+        body.login-seite {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-karte {
+            width: 100%;
+            max-width: 360px;
+            margin: 1rem;
+        }
+        .login-karte h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="login-seite">
+    <div class="karte login-karte">
+        <h1>Lagersoftware</h1>
+
+        <p class="meldung-fehler" th:if="${param.error}">
+            Benutzername oder Passwort ist falsch.
+        </p>
+        <p class="meldung-erfolg" th:if="${param.logout}">
+            Du wurdest abgemeldet.
+        </p>
+
+        <form class="formular" th:action="@{/login}" method="post">
+            <div class="feld">
+                <label for="username">Benutzername</label>
+                <input type="text" id="username" name="username" required autofocus />
+            </div>
+            <div class="feld">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" required />
+            </div>
+
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Anmelden</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

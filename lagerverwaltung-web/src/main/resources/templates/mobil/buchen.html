@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,6 +22,7 @@
 </head>
 <body>
     <h1>Material buchen</h1>
+    <p class="hinweis">Gebucht als <strong sec:authentication="name">Benutzer</strong>.</p>
 
     <p class="meldung-erfolg" th:if="${erfolg}" th:text="${erfolg}"></p>
     <p class="meldung-fehler" th:if="${fehler}" th:text="${fehler}"></p>
@@ -45,11 +46,6 @@
         <select name="lagerplatzId" required>
             <option th:each="lp : ${lagerplatzOptionen}" th:value="${lp.id}"
                     th:text="${lp.lager.name} + ' – ' + ${lp.bezeichnung}"></option>
-        </select>
-
-        <label>Benutzer</label>
-        <select name="benutzerId" required>
-            <option th:each="b : ${benutzerOptionen}" th:value="${b.id}" th:text="${b.anzeigename}"></option>
         </select>
 
         <label>Menge</label>

@@ -5,6 +5,7 @@ import de.web192.lagersoftware.benutzer.BenutzerRepository;
 import de.web192.lagersoftware.benutzer.Rolle;
 import de.web192.lagersoftware.lager.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,9 +15,7 @@ import org.springframework.stereotype.Component;
  * Laeuft nur, wenn noch kein Lager existiert, damit bei jedem weiteren
  * Start keine Duplikate entstehen.
  *
- * TODO (gemeinsam, sobald Login drankommt): passwortHash ist hier nur ein
- * Platzhaltertext, kein echter Hash. Vor einem echten Login muss das durch
- * einen PasswordEncoder ersetzt werden.
+ * Zugangsdaten der Beispiel-Benutzer stehen im README (Abschnitt "Login").
  */
 @Component
 public class TestdatenInitializer implements CommandLineRunner {
@@ -26,15 +25,17 @@ public class TestdatenInitializer implements CommandLineRunner {
     private final MaterialRepository materialRepository;
     private final BenutzerRepository benutzerRepository;
     private final BestandService bestandService;
+    private final PasswordEncoder passwordEncoder;
 
     public TestdatenInitializer(LagerRepository lagerRepository, LagerplatzRepository lagerplatzRepository,
                                  MaterialRepository materialRepository, BenutzerRepository benutzerRepository,
-                                 BestandService bestandService) {
+                                 BestandService bestandService, PasswordEncoder passwordEncoder) {
         this.lagerRepository = lagerRepository;
         this.lagerplatzRepository = lagerplatzRepository;
         this.materialRepository = materialRepository;
         this.benutzerRepository = benutzerRepository;
         this.bestandService = bestandService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -43,8 +44,8 @@ public class TestdatenInitializer implements CommandLineRunner {
             return; // schon befuellt
         }
 
-        Benutzer admin = neuerBenutzer("admin", "Admin", Rolle.ADMIN);
-        Benutzer monteur = neuerBenutzer("monteur1", "Monteur 1", Rolle.MITARBEITER);
+        Benutzer admin = neuerBenutzer("admin", "Admin", "admin123", Rolle.ADMIN);
+        Benutzer monteur = neuerBenutzer("monteur1", "Monteur 1", "monteur123", Rolle.MITARBEITER);
 
         Lager hauptlager = neuesLager("Hauptlager", "Penzlin");
         Lager fahrzeug = neuesLager("Fahrzeug 1", "mobil");
@@ -72,11 +73,11 @@ public class TestdatenInitializer implements CommandLineRunner {
         bestandService.ausbuchen(schrauben, kofferraum, monteur, 30);
     }
 
-    private Benutzer neuerBenutzer(String benutzername, String anzeigename, Rolle rolle) {
+    private Benutzer neuerBenutzer(String benutzername, String anzeigename, String klartextPasswort, Rolle rolle) {
         Benutzer b = new Benutzer();
         b.setBenutzername(benutzername);
         b.setAnzeigename(anzeigename);
-        b.setPasswortHash("kein-login-in-v0.1");
+        b.setPasswortHash(passwordEncoder.encode(klartextPasswort));
         b.setRolle(rolle);
         return benutzerRepository.save(b);
     }

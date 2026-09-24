@@ -22,9 +22,10 @@ public class Benutzer {
     @Column(nullable = false)
     private String anzeigename;
 
-    // TODO (naechster Schritt, gemeinsam): richtiges Passwort-Hashing einbauen
-    // (z.B. ueber Spring Security PasswordEncoder), sobald der Login drankommt.
-    @Column(nullable = false)
+    // BCrypt-Hash (siehe PasswordEncoder in lagerverwaltung-web), niemals
+    // Klartext. Nullable, weil ein rein per Microsoft angemeldeter Benutzer
+    // (geplant, siehe Backlog) kein lokales Passwort braucht.
+    @Column
     private String passwortHash;
 
     @Enumerated(EnumType.STRING)

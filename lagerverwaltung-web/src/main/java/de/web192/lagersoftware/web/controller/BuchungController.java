@@ -3,7 +3,9 @@ package de.web192.lagersoftware.web.controller;
 import de.web192.lagersoftware.benutzer.Benutzer;
 import de.web192.lagersoftware.benutzer.BenutzerRepository;
 import de.web192.lagersoftware.lager.*;
+import de.web192.lagersoftware.web.security.BenutzerPrincipal;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,14 +44,17 @@ public class BuchungController {
     }
 
     // Bewusst getrennt von "/speichern": das hier fuehrt eine ECHTE Buchung
-    // aus (ueber BestandService), passt also auch den Bestand an.
+    // aus (ueber BestandService), passt also auch den Bestand an. Der
+    // buchende Benutzer kommt aus dem Login, nicht mehr aus einer frei
+    // waehlbaren Dropdown-Liste - sonst koennte jeder Buchungen unter
+    // fremdem Namen anlegen.
     @PostMapping("/buchen")
     public String buchen(@RequestParam Long materialId, @RequestParam Long lagerplatzId,
-                          @RequestParam Long benutzerId, @RequestParam Buchung.BuchungsTyp typ,
-                          @RequestParam double menge, Model model) {
+                          @RequestParam Buchung.BuchungsTyp typ, @RequestParam double menge,
+                          @AuthenticationPrincipal BenutzerPrincipal angemeldeter, Model model) {
         Material material = materialRepository.findById(materialId).orElseThrow();
         Lagerplatz lagerplatz = lagerplatzRepository.findById(lagerplatzId).orElseThrow();
-        Benutzer benutzer = benutzerRepository.findById(benutzerId).orElseThrow();
+        Benutzer benutzer = angemeldeter.getBenutzer();
 
         try {
             if (typ == Buchung.BuchungsTyp.EINBUCHUNG) {

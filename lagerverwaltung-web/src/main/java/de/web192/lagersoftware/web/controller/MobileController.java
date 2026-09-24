@@ -1,8 +1,9 @@
 package de.web192.lagersoftware.web.controller;
 
 import de.web192.lagersoftware.benutzer.Benutzer;
-import de.web192.lagersoftware.benutzer.BenutzerRepository;
 import de.web192.lagersoftware.lager.*;
+import de.web192.lagersoftware.web.security.BenutzerPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +26,12 @@ public class MobileController {
     private final BestandService bestandService;
     private final MaterialRepository materialRepository;
     private final LagerplatzRepository lagerplatzRepository;
-    private final BenutzerRepository benutzerRepository;
 
     public MobileController(BestandService bestandService, MaterialRepository materialRepository,
-                             LagerplatzRepository lagerplatzRepository, BenutzerRepository benutzerRepository) {
+                             LagerplatzRepository lagerplatzRepository) {
         this.bestandService = bestandService;
         this.materialRepository = materialRepository;
         this.lagerplatzRepository = lagerplatzRepository;
-        this.benutzerRepository = benutzerRepository;
     }
 
     @GetMapping
@@ -52,13 +51,16 @@ public class MobileController {
         return "mobil/buchen";
     }
 
+    // Buchender Benutzer kommt aus dem Login (siehe BuchungController fuer
+    // dieselbe Begruendung), nicht mehr aus einer frei waehlbaren Liste.
     @PostMapping("/buchen")
     public String buchen(@RequestParam Long materialId, @RequestParam Long lagerplatzId,
-                          @RequestParam Long benutzerId, @RequestParam Buchung.BuchungsTyp typ,
-                          @RequestParam double menge, Model model, RedirectAttributes redirectAttributes) {
+                          @RequestParam Buchung.BuchungsTyp typ, @RequestParam double menge,
+                          @AuthenticationPrincipal BenutzerPrincipal angemeldeter,
+                          Model model, RedirectAttributes redirectAttributes) {
         Material material = materialRepository.findById(materialId).orElseThrow();
         Lagerplatz lagerplatz = lagerplatzRepository.findById(lagerplatzId).orElseThrow();
-        Benutzer benutzer = benutzerRepository.findById(benutzerId).orElseThrow();
+        Benutzer benutzer = angemeldeter.getBenutzer();
 
         try {
             if (typ == Buchung.BuchungsTyp.EINBUCHUNG) {
@@ -81,7 +83,6 @@ public class MobileController {
     private void befuelleOptionen(Model model) {
         model.addAttribute("materialOptionen", materialRepository.findAll());
         model.addAttribute("lagerplatzOptionen", lagerplatzRepository.findAll());
-        model.addAttribute("benutzerOptionen", benutzerRepository.findAll());
         model.addAttribute("typOptionen", Buchung.BuchungsTyp.values());
     }
 }

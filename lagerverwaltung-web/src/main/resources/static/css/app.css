@@ -85,6 +85,30 @@ a {
 .nav-links {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Angemeldeter Benutzer + Logout ganz rechts in der Nav. */
+.nav-benutzer {
+    color: #EDE9E1;
+    font-size: 13px;
+    margin-left: auto;
+    padding: 0 10px;
+    white-space: nowrap;
+}
+
+.nav-logout {
+    display: inline;
+}
+
+.nav-logout .btn.text {
+    color: #EDE9E1;
+    padding: 14px 10px;
+    font-size: 14px;
+}
+
+.nav-logout .btn.text:hover {
+    color: white;
 }
 
 .nav-toggle {
@@ -148,6 +172,11 @@ form.formular {
 
 form.formular .feld {
     margin-bottom: 16px;
+}
+
+.hinweis {
+    color: var(--muted);
+    font-size: 14px;
 }
 
 form.formular label {

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
     <!--
       Gemeinsame Navigation der Verwaltungs-GUI. Einbindung pro Seite:
         <div th:replace="~{fragments/nav :: nav('lager')}"></div>
       Der Parameter markiert den aktiven Menüpunkt (th:classappend unten).
+
+      Stammdaten-Links (Lager .. Lieferscheine) sind nur fuer ADMIN sichtbar
+      (sec:authorize), weil MITARBEITER laut Rollen-Definition keine
+      Stammdaten bearbeiten darf - die Links wuerden sonst ohnehin nur zu
+      einer 403-Seite fuehren.
     -->
     <nav class="top-nav" th:fragment="nav(aktiv)">
         <a class="marke" th:href="@{/}">Lagersoftware</a>
@@ -15,13 +20,18 @@
         <label for="nav-toggle" class="nav-burger" aria-label="Menü öffnen">☰</label>
 
         <div class="nav-links">
-            <a class="link" th:classappend="${aktiv == 'lager'} ? 'aktiv' : ''" th:href="@{/lager}">Lager</a>
-            <a class="link" th:classappend="${aktiv == 'lagerplatz'} ? 'aktiv' : ''" th:href="@{/lagerplatz}">Lagerplätze</a>
-            <a class="link" th:classappend="${aktiv == 'material'} ? 'aktiv' : ''" th:href="@{/material}">Material</a>
+            <a class="link" sec:authorize="hasRole('ADMIN')" th:classappend="${aktiv == 'lager'} ? 'aktiv' : ''" th:href="@{/lager}">Lager</a>
+            <a class="link" sec:authorize="hasRole('ADMIN')" th:classappend="${aktiv == 'lagerplatz'} ? 'aktiv' : ''" th:href="@{/lagerplatz}">Lagerplätze</a>
+            <a class="link" sec:authorize="hasRole('ADMIN')" th:classappend="${aktiv == 'material'} ? 'aktiv' : ''" th:href="@{/material}">Material</a>
             <a class="link" th:classappend="${aktiv == 'bestand'} ? 'aktiv' : ''" th:href="@{/bestand}">Bestand</a>
             <a class="link" th:classappend="${aktiv == 'buchung'} ? 'aktiv' : ''" th:href="@{/buchung}">Buchungen</a>
-            <a class="link" th:classappend="${aktiv == 'projekt'} ? 'aktiv' : ''" th:href="@{/projekt}">Projekte</a>
-            <a class="link" th:classappend="${aktiv == 'lieferschein'} ? 'aktiv' : ''" th:href="@{/lieferschein}">Lieferscheine</a>
+            <a class="link" sec:authorize="hasRole('ADMIN')" th:classappend="${aktiv == 'projekt'} ? 'aktiv' : ''" th:href="@{/projekt}">Projekte</a>
+            <a class="link" sec:authorize="hasRole('ADMIN')" th:classappend="${aktiv == 'lieferschein'} ? 'aktiv' : ''" th:href="@{/lieferschein}">Lieferscheine</a>
+
+            <span class="nav-benutzer" sec:authentication="name">Benutzer</span>
+            <form class="nav-logout" th:action="@{/logout}" method="post">
+                <button type="submit" class="btn text">Abmelden</button>
+            </form>
         </div>
     </nav>
 </body>
