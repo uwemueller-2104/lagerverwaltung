@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!--
+      Gemeinsame Navigation der Verwaltungs-GUI. Einbindung pro Seite:
+        <div th:replace="~{fragments/nav :: nav('lager')}"></div>
+      Der Parameter markiert den aktiven Menüpunkt (th:classappend unten).
+    -->
+    <nav class="top-nav" th:fragment="nav(aktiv)">
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-burger" aria-label="Menü öffnen">☰</label>
+      <div class="nav-links">
+        <a class="marke" th:href="@{/}">Lagersoftware</a>
+        <a class="link" th:classappend="${aktiv == 'lager'} ? 'aktiv' : ''" th:href="@{/lager}">Lager</a>
+        <a class="link" th:classappend="${aktiv == 'lagerplatz'} ? 'aktiv' : ''" th:href="@{/lagerplatz}">Lagerplätze</a>
+        <a class="link" th:classappend="${aktiv == 'material'} ? 'aktiv' : ''" th:href="@{/material}">Material</a>
+        <a class="link" th:classappend="${aktiv == 'bestand'} ? 'aktiv' : ''" th:href="@{/bestand}">Bestand</a>
+        <a class="link" th:classappend="${aktiv == 'buchung'} ? 'aktiv' : ''" th:href="@{/buchung}">Buchungen</a>
+        <a class="link" th:classappend="${aktiv == 'projekt'} ? 'aktiv' : ''" th:href="@{/projekt}">Projekte</a>
+        <a class="link" th:classappend="${aktiv == 'lieferschein'} ? 'aktiv' : ''" th:href="@{/lieferschein}">Lieferscheine</a>
+      </div>  
+    </nav>
+</body>
+</html>
