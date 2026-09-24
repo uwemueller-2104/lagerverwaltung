@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Material verwalten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1>Material</h1>
+    <div th:replace="~{fragments/nav :: nav('material')}"></div>
+    <main class="inhalt">
+        <h1>Material</h1>
 
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Einheit</th>
-                <th>Mindestbestand</th>
-                <th>Barcode</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="m : ${materialListe}">
-                <td th:text="${m.name}">Name</td>
-                <td th:text="${m.einheit}">Einheit</td>
-                <td th:text="${m.mindestbestand}">0</td>
-                <td th:text="${m.barcode}">Barcode</td>
-                <td>
-                    <a th:href="@{/material/{id}/bearbeiten(id=${m.id})}">Bearbeiten</a>
-                    <form th:action="@{/material/{id}/loeschen(id=${m.id})}" method="post" style="display:inline"
-                          onsubmit="return confirm('Material wirklich löschen?');">
-                        <button type="submit">Löschen</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="tabelle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Einheit</th>
+                    <th>Mindestbestand</th>
+                    <th>Barcode</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${materialListe}">
+                    <td th:text="${m.name}">Name</td>
+                    <td th:text="${m.einheit}">Einheit</td>
+                    <td th:text="${m.mindestbestand}">0</td>
+                    <td th:text="${m.barcode}">Barcode</td>
+                    <td class="aktionen">
+                        <a th:href="@{/material/{id}/bearbeiten(id=${m.id})}">Bearbeiten</a>
+                        <form th:action="@{/material/{id}/loeschen(id=${m.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Material wirklich löschen?');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <p><a th:href="@{/material/neu}">+ Neues Material anlegen</a></p>
-    <p><a th:href="@{/}">Zurück zur Startseite</a></p>
+        <div class="aktionsleiste">
+            <a class="btn" th:href="@{/material/neu}">+ Neues Material anlegen</a>
+        </div>
+    </main>
 </body>
 </html>

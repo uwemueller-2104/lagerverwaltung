@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Neuer Lieferschein</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('lieferschein')}"></div>
+    <main class="inhalt">
+        <h1 th:text="'Neuer Lieferschein – ' + ${projekt.name}">Neuer Lieferschein</h1>
+
+        <p th:if="${fehler}" th:text="${fehler}" class="meldung-fehler"></p>
+
+        <form class="formular" th:action="@{/lieferschein/anlegen}" method="post" style="max-width:720px;">
+            <input type="hidden" name="projektId" th:value="${projekt.id}" />
+
+            <div class="feld">
+                <label>Nummer</label>
+                <input type="text" name="nummer" required />
+            </div>
+            <div class="feld">
+                <label>Angenommen von</label>
+                <select name="benutzerId" required>
+                    <option th:each="b : ${benutzerOptionen}" th:value="${b.id}" th:text="${b.anzeigename}"></option>
+                </select>
+            </div>
+
+            <h2>Positionen</h2>
+            <p>Ware kommt im eigenen Lager an – jede ausgefüllte Zeile (Menge &gt; 0) bucht das Material sofort auf den gewählten Lagerplatz ein.</p>
+            <table class="tabelle">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Lagerplatz</th>
+                        <th>Menge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="i : ${#numbers.sequence(1, positionsZeilen)}">
+                        <td>
+                            <select name="materialId">
+                                <option th:each="m : ${materialOptionen}" th:value="${m.id}" th:text="${m.name}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="lagerplatzId">
+                                <option th:each="lp : ${lagerplatzOptionen}" th:value="${lp.id}"
+                                        th:text="${lp.lager.name} + ' – ' + ${lp.bezeichnung}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" step="0.01" name="menge" value="0" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Lieferschein anlegen</button>
+                <a class="btn text" th:href="@{/projekt/{id}(id=${projekt.id})}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

@@ -82,6 +82,24 @@ a {
     border-bottom: 2px solid var(--akzent);
 }
 
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.nav-toggle {
+    display: none;
+}
+
+.nav-burger {
+    display: none;
+    color: white;
+    font-size: 22px;
+    padding: 12px 6px;
+    margin-left: auto;
+    cursor: pointer;
+}
+
 main.inhalt {
     max-width: 1000px;
     margin: 0 auto;
@@ -237,4 +255,120 @@ table.tabelle .aktionen button.loeschen {
 
 .aktionsleiste a {
     margin-right: 12px;
+}
+
+/* =========================================================================
+   Responsive: eine Oberfläche für Desktop UND Handy, keine separate
+   /mobil-Version. Ab hier wird verkleinert statt neu gebaut.
+   ========================================================================= */
+
+@media (max-width: 720px) {
+
+    /* Navigation: Marke + Hamburger-Symbol bleiben in einer Zeile, die
+       Links klappen per reinem CSS (Checkbox-Trick, kein JS) darunter auf. */
+    .nav-burger {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .nav-toggle:checked ~ .nav-links {
+        display: flex;
+    }
+
+    .nav-links a.link {
+        padding: 14px 4px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    main.inhalt {
+        padding: 16px 16px 40px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    /* Tabellen: aus Zeilen werden Karten. Jede <td> braucht dafür ein
+       data-label-Attribut im Template (siehe lager/liste.html) - daraus
+       erzeugt ::before die Beschriftung, die vorher in der <th> stand. */
+    table.tabelle thead {
+        display: none;
+    }
+
+    table.tabelle,
+    table.tabelle tbody,
+    table.tabelle tr,
+    table.tabelle td {
+        display: block;
+        width: 100%;
+    }
+
+    table.tabelle {
+        background: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    table.tabelle tr {
+        background: var(--flaeche);
+        border-radius: var(--radius);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+
+    table.tabelle td {
+        position: relative;
+        padding-left: 44%;
+        min-height: 22px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    table.tabelle tr td:last-child {
+        border-bottom: none;
+    }
+
+    table.tabelle td[data-label]::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 14px;
+        width: 38%;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--akzent-2);
+    }
+
+    table.tabelle td.aktionen {
+        padding-left: 14px;
+    }
+
+    table.tabelle td.aktionen a,
+    table.tabelle td.aktionen button {
+        margin: 4px 6px 4px 0;
+    }
+
+    /* Formulare: volle Breite, größere Antippflächen statt Desktop-Kachel. */
+    form.formular {
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    form.formular input,
+    form.formular select,
+    form.formular textarea {
+        padding: 12px;
+        font-size: 16px; /* verhindert Auto-Zoom beim Fokussieren in Safari/iOS */
+    }
+
+    .aktionsleiste .btn,
+    .aktionsleiste button {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin: 0 0 10px;
+    }
 }

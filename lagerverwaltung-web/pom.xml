@@ -40,6 +40,12 @@
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!-- DB-Migrationen statt Hibernate ddl-auto: Version wird von
+         spring-boot-starter-parent verwaltet, passend zu H2 3.3.x. -->
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

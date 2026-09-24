@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Angebot importieren</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('projekt')}"></div>
+    <main class="inhalt">
+        <h1 th:text="'Angebot – ' + ${projekt.name}">Angebot</h1>
+
+        <p>
+            Text aus Plancraft hier einfügen: eine Position pro Zeile, Material und
+            Menge getrennt durch Tab (oder mehrere Leerzeichen), z.B.<br/>
+            <code>Schrauben 4x40&#9;250</code>
+        </p>
+        <p>Ein erneuter Import ersetzt die bisherigen Positionen dieses Angebots vollständig.</p>
+
+        <form class="formular" th:action="@{/projekt/{id}/angebot/importieren(id=${projekt.id})}" method="post" style="max-width:640px;">
+            <div class="feld">
+                <textarea name="text" rows="10" required></textarea>
+            </div>
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Importieren</button>
+            </div>
+        </form>
+
+        <div th:if="${importErgebnis != null}">
+            <h2>Ergebnis des letzten Imports</h2>
+            <table class="tabelle">
+                <thead>
+                    <tr>
+                        <th>Material (aus Text)</th>
+                        <th>Menge (Soll)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="z : ${importErgebnis}">
+                        <td th:text="${z.materialName}">Material</td>
+                        <td th:text="${z.mengeSoll}">Menge</td>
+                        <td th:text="${z.gefunden} ? 'übernommen' : 'Material nicht gefunden – übersprungen'"
+                            th:style="${z.gefunden} ? '' : 'color:var(--loeschen-text);'">Status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Aktuelle Positionen</h2>
+        <table class="tabelle" th:if="${positionen != null and not #lists.isEmpty(positionen)}">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Menge (Soll)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${positionen}">
+                    <td th:text="${p.material.name}">Material</td>
+                    <td th:text="${p.mengeSoll} + ' ' + ${p.material.einheit}">Menge</td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${positionen == null or #lists.isEmpty(positionen)}">Noch keine Positionen importiert.</p>
+
+        <div class="aktionsleiste">
+            <a class="btn text" th:href="@{/projekt/{id}(id=${projekt.id})}">Zurück zum Projekt</a>
+        </div>
+    </main>
+</body>
+</html>

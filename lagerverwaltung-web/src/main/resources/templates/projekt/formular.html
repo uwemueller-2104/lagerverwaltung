@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projekt anlegen/bearbeiten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('projekt')}"></div>
+    <main class="inhalt">
+        <h1 th:text="${projekt.id} != null ? 'Projekt bearbeiten' : 'Neues Projekt'">Projekt</h1>
+
+        <form class="formular" th:action="@{/projekt/speichern}" th:object="${projekt}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="feld">
+                <label>Name</label>
+                <input type="text" th:field="*{name}" required />
+            </div>
+            <div class="feld">
+                <label>Kunde</label>
+                <input type="text" th:field="*{kunde}" />
+            </div>
+            <div class="feld">
+                <label>Status</label>
+                <select th:field="*{status}">
+                    <option th:each="s : ${statusOptionen}" th:value="${s}" th:text="${s}"></option>
+                </select>
+            </div>
+
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Speichern</button>
+                <a class="btn text" th:href="@{/projekt}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

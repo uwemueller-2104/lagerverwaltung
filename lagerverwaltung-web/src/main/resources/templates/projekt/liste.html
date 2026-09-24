@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projekte</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('projekt')}"></div>
+    <main class="inhalt">
+        <h1>Projekte</h1>
+
+        <table class="tabelle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Kunde</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${projektListe}">
+                    <td><a th:href="@{/projekt/{id}(id=${p.id})}" th:text="${p.name}">Name</a></td>
+                    <td th:text="${p.kunde}">Kunde</td>
+                    <td th:text="${p.status}">Status</td>
+                    <td class="aktionen">
+                        <a th:href="@{/projekt/{id}/bearbeiten(id=${p.id})}">Bearbeiten</a>
+                        <form th:action="@{/projekt/{id}/loeschen(id=${p.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Projekt wirklich löschen?');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="aktionsleiste">
+            <a class="btn" th:href="@{/projekt/neu}">+ Neues Projekt anlegen</a>
+        </div>
+    </main>
+</body>
+</html>

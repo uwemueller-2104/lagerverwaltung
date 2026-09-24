@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Lager anlegen/bearbeiten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1 th:text="${lager.id} != null ? 'Lager bearbeiten' : 'Neues Lager'">Lager</h1>
+    <div th:replace="~{fragments/nav :: nav('lager')}"></div>
+    <main class="inhalt">
+        <h1 th:text="${lager.id} != null ? 'Lager bearbeiten' : 'Neues Lager'">Lager</h1>
 
-    <form th:action="@{/lager/speichern}" th:object="${lager}" method="post">
-        <input type="hidden" th:field="*{id}" />
+        <form class="formular" th:action="@{/lager/speichern}" th:object="${lager}" method="post">
+            <input type="hidden" th:field="*{id}" />
 
-        <div>
-            <label>Name</label><br/>
-            <input type="text" th:field="*{name}" required />
-        </div>
-        <div>
-            <label>Ort</label><br/>
-            <input type="text" th:field="*{ort}" />
-        </div>
+            <div class="feld">
+                <label>Name</label>
+                <input type="text" th:field="*{name}" required />
+            </div>
+            <div class="feld">
+                <label>Ort</label>
+                <input type="text" th:field="*{ort}" />
+            </div>
 
-        <p>
-            <button type="submit">Speichern</button>
-            <a th:href="@{/lager}">Abbrechen</a>
-        </p>
-    </form>
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Speichern</button>
+                <a class="btn text" th:href="@{/lager}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
 </body>
 </html>

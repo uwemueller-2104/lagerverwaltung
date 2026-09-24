@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lagersoftware – Mobil</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
     <style>
-        body { font-family: -apple-system, "Segoe UI", sans-serif; background: #F5F3EF; color: #21201D;
-               margin: 0; padding: 20px; font-size: 18px; }
+        body { padding: 20px; font-size: 18px; }
         h1 { font-size: 22px; }
-        a.button { display: block; background: #C97A2B; color: white; text-decoration: none;
-                   text-align: center; padding: 18px; border-radius: 10px; margin-top: 16px;
+        a.button { display: block; background: var(--akzent); color: white; text-decoration: none;
+                   text-align: center; padding: 18px; border-radius: var(--radius); margin-top: 16px;
                    font-weight: 600; font-size: 19px; }
+        a.button.sekundaer { background: var(--akzent-2); }
     </style>
 </head>
 <body>
     <h1>Lagersoftware</h1>
     <a class="button" th:href="@{/mobil/buchen}">Material buchen</a>
-    <a class="button" th:href="@{/mobil/material}" style="background:#57524A;">Bestand ansehen</a>
+    <a class="button sekundaer" th:href="@{/mobil/material}">Bestand ansehen</a>
 </body>
 </html>

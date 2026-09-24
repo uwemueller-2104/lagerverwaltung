@@ -3,16 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Lagersoftware v0.1</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1>Lagersoftware v0.1</h1>
-    <p>Projekt-Setup steht. Verwaltungs-GUI und mobile Ansicht kommen als naechstes.</p>
-    <p>API-Test: <a href="/api/health">/api/health</a></p>
-    <p><a href="/lager">Lager verwalten</a></p>
-    <p><a href="/lagerplatz">Lagerplätze verwalten</a></p>
-    <p><a href="/material">Material verwalten</a></p>
-    <p><a href="/bestand">Bestand ansehen/korrigieren</a></p>
-    <p><a href="/buchung">Buchungen (Ein-/Ausbuchen)</a></p>
-    <p><a href="/mobil">Mobile Ansicht</a></p>
+    <div th:replace="~{fragments/nav :: nav('')}"></div>
+    <main class="inhalt">
+        <h1>Lagersoftware v0.1</h1>
+        <p>API-Test: <a href="/api/health">/api/health</a></p>
+
+        <div class="karte">
+            <h2 style="margin-top:0;">Lagerverwaltung</h2>
+            <p><a href="/lager">Lager verwalten</a></p>
+            <p><a href="/lagerplatz">Lagerplätze verwalten</a></p>
+            <p><a href="/material">Material verwalten</a></p>
+            <p><a href="/bestand">Bestand ansehen/korrigieren</a></p>
+            <p><a href="/buchung">Buchungen (Ein-/Ausbuchen)</a></p>
+        </div>
+
+        <div class="karte">
+            <h2 style="margin-top:0;">Projektabwicklung</h2>
+            <p><a href="/projekt">Projekte (Angebot, Soll-vs-Ist, Lieferscheine)</a></p>
+            <p><a href="/lieferschein">Lieferscheine</a></p>
+        </div>
+
+        <div class="karte">
+            <h2 style="margin-top:0;">Mobil</h2>
+            <p><a href="/mobil">Mobile Ansicht (Bestand ansehen, buchen, scannen)</a></p>
+        </div>
+    </main>
 </body>
 </html>

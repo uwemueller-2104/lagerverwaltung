@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${projekt.name}">Projekt</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('projekt')}"></div>
+    <main class="inhalt">
+        <h1 th:text="${projekt.name}">Projekt</h1>
+        <p>
+            Kunde: <span th:text="${projekt.kunde}">Kunde</span>
+            &nbsp;|&nbsp;
+            Status: <span th:text="${projekt.status}">Status</span>
+            &nbsp;|&nbsp;
+            <a th:href="@{/projekt/{id}/bearbeiten(id=${projekt.id})}">Bearbeiten</a>
+        </p>
+
+        <h2>Angebot (Soll-Material)</h2>
+        <p th:unless="${angebotVorhanden}">Noch kein Angebot importiert.</p>
+        <p><a th:href="@{/projekt/{id}/angebot(id=${projekt.id})}">Angebot importieren / ansehen</a></p>
+
+        <h2>Soll vs. Ist</h2>
+        <table class="tabelle" th:if="${not #lists.isEmpty(sollIstListe)}">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Soll</th>
+                    <th>Ist</th>
+                    <th>Differenz</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="si : ${sollIstListe}">
+                    <td th:text="${si.materialName}">Material</td>
+                    <td th:text="${si.soll} + ' ' + ${si.einheit}">Soll</td>
+                    <td th:text="${si.ist} + ' ' + ${si.einheit}">Ist</td>
+                    <td th:text="${si.ist - si.soll} + ' ' + ${si.einheit}"
+                        th:style="${si.ist > si.soll} ? 'color:var(--loeschen-text);' : ''">Differenz</td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(sollIstListe)}">Noch keine Soll- oder Ist-Werte vorhanden.</p>
+
+        <h2>Lieferscheine</h2>
+        <table class="tabelle" th:if="${not #lists.isEmpty(lieferscheinListe)}">
+            <thead>
+                <tr>
+                    <th>Nummer</th>
+                    <th>Datum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="l : ${lieferscheinListe}">
+                    <td><a th:href="@{/lieferschein/{id}(id=${l.id})}" th:text="${l.nummer}">Nummer</a></td>
+                    <td th:text="${l.datum}">Datum</td>
+                    <td class="aktionen">
+                        <form th:action="@{/lieferschein/{id}/loeschen(id=${l.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Lieferschein wirklich löschen? Die zugehörige Einbuchung wird dadurch NICHT rückgängig gemacht.');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(lieferscheinListe)}">Noch keine Lieferscheine erfasst.</p>
+
+        <div class="aktionsleiste">
+            <a class="btn" th:href="@{/lieferschein/neu(projektId=${projekt.id})}">+ Neuen Lieferschein erfassen</a>
+            <a class="btn text" th:href="@{/projekt}">Zurück zur Projektübersicht</a>
+        </div>
+    </main>
+</body>
+</html>

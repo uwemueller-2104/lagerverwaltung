@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lieferscheine</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('lieferschein')}"></div>
+    <main class="inhalt">
+        <h1>Lieferscheine</h1>
+
+        <table class="tabelle" th:if="${not #lists.isEmpty(lieferscheinListe)}">
+            <thead>
+                <tr>
+                    <th>Nummer</th>
+                    <th>Projekt</th>
+                    <th>Datum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="l : ${lieferscheinListe}">
+                    <td><a th:href="@{/lieferschein/{id}(id=${l.id})}" th:text="${l.nummer}">Nummer</a></td>
+                    <td><a th:href="@{/projekt/{id}(id=${l.projekt.id})}" th:text="${l.projekt.name}">Projekt</a></td>
+                    <td th:text="${l.datum}">Datum</td>
+                    <td class="aktionen">
+                        <form th:action="@{/lieferschein/{id}/loeschen(id=${l.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Lieferschein wirklich löschen? Die zugehörige Einbuchung wird dadurch NICHT rückgängig gemacht.');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p th:if="${#lists.isEmpty(lieferscheinListe)}">Noch keine Lieferscheine erfasst.</p>
+    </main>
+</body>
+</html>

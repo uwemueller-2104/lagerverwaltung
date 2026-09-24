@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Lieferschein ' + ${lieferschein.nummer}">Lieferschein</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('lieferschein')}"></div>
+    <main class="inhalt">
+        <h1 th:text="'Lieferschein ' + ${lieferschein.nummer}">Lieferschein</h1>
+        <p>
+            Projekt: <a th:href="@{/projekt/{id}(id=${lieferschein.projekt.id})}" th:text="${lieferschein.projekt.name}">Projekt</a>
+            &nbsp;|&nbsp;
+            Datum: <span th:text="${lieferschein.datum}">Datum</span>
+        </p>
+
+        <table class="tabelle" th:if="${not #lists.isEmpty(positionen)}">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Lagerplatz</th>
+                    <th>Menge</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${positionen}">
+                    <td th:text="${p.material.name}">Material</td>
+                    <td th:text="${p.lagerplatz.lager.name} + ' – ' + ${p.lagerplatz.bezeichnung}">Lagerplatz</td>
+                    <td th:text="${p.menge} + ' ' + ${p.material.einheit}">Menge</td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(positionen)}">Keine Positionen vorhanden.</p>
+
+        <div class="aktionsleiste">
+            <a class="btn text" th:href="@{/projekt/{id}(id=${lieferschein.projekt.id})}">Zurück zum Projekt</a>
+        </div>
+    </main>
+</body>
+</html>

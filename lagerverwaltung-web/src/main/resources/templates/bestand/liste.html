@@ -3,39 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Bestand</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1>Bestand</h1>
-    <p>Zeigt, wie viel von welchem Material an welchem Lagerplatz liegt. Für reguläre
-       Ein-/Ausbuchungen bitte <a th:href="@{/buchung}">Buchungen</a> verwenden – hier ist nur
-       die direkte Korrektur (z.B. nach einer Inventur).</p>
+    <div th:replace="~{fragments/nav :: nav('bestand')}"></div>
+    <main class="inhalt">
+        <h1>Bestand</h1>
+        <p>Zeigt, wie viel von welchem Material an welchem Lagerplatz liegt. Für reguläre
+           Ein-/Ausbuchungen bitte <a th:href="@{/buchung}">Buchungen</a> verwenden – hier ist nur
+           die direkte Korrektur (z.B. nach einer Inventur).</p>
 
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Material</th>
-                <th>Lagerplatz</th>
-                <th>Menge</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="b : ${bestandListe}">
-                <td th:text="${b.material.name}">Material</td>
-                <td th:text="${b.lagerplatz.bezeichnung}">Lagerplatz</td>
-                <td th:text="${b.menge}">0</td>
-                <td>
-                    <a th:href="@{/bestand/{id}/bearbeiten(id=${b.id})}">Korrigieren</a>
-                    <form th:action="@{/bestand/{id}/loeschen(id=${b.id})}" method="post" style="display:inline"
-                          onsubmit="return confirm('Bestandseintrag wirklich löschen?');">
-                        <button type="submit">Löschen</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="tabelle">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Lagerplatz</th>
+                    <th>Menge</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="b : ${bestandListe}">
+                    <td th:text="${b.material.name}">Material</td>
+                    <td th:text="${b.lagerplatz.bezeichnung}">Lagerplatz</td>
+                    <td th:text="${b.menge}">0</td>
+                    <td class="aktionen">
+                        <a th:href="@{/bestand/{id}/bearbeiten(id=${b.id})}">Korrigieren</a>
+                        <form th:action="@{/bestand/{id}/loeschen(id=${b.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Bestandseintrag wirklich löschen?');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <p><a th:href="@{/bestand/neu}">+ Bestand direkt anlegen</a></p>
-    <p><a th:href="@{/}">Zurück zur Startseite</a></p>
+        <div class="aktionsleiste">
+            <a class="btn" th:href="@{/bestand/neu}">+ Bestand direkt anlegen</a>
+        </div>
+    </main>
 </body>
 </html>

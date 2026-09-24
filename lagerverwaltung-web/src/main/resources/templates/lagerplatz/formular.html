@@ -3,32 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Lagerplatz anlegen/bearbeiten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1 th:text="${lagerplatz.id} != null ? 'Lagerplatz bearbeiten' : 'Neuer Lagerplatz'">Lagerplatz</h1>
+    <div th:replace="~{fragments/nav :: nav('lagerplatz')}"></div>
+    <main class="inhalt">
+        <h1 th:text="${lagerplatz.id} != null ? 'Lagerplatz bearbeiten' : 'Neuer Lagerplatz'">Lagerplatz</h1>
 
-    <form th:action="@{/lagerplatz/speichern}" th:object="${lagerplatz}" method="post">
-        <input type="hidden" th:field="*{id}" />
+        <form class="formular" th:action="@{/lagerplatz/speichern}" th:object="${lagerplatz}" method="post">
+            <input type="hidden" th:field="*{id}" />
 
-        <div>
-            <label>Lager</label><br/>
-            <select name="lagerId" required>
-                <option th:each="l : ${lagerOptionen}"
-                        th:value="${l.id}"
-                        th:text="${l.name}"
-                        th:selected="${lagerplatz.lager != null and lagerplatz.lager.id == l.id}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <label>Bezeichnung</label><br/>
-            <input type="text" th:field="*{bezeichnung}" placeholder="z.B. Regal A3" required />
-        </div>
+            <div class="feld">
+                <label>Lager</label>
+                <select name="lagerId" required>
+                    <option th:each="l : ${lagerOptionen}"
+                            th:value="${l.id}"
+                            th:text="${l.name}"
+                            th:selected="${lagerplatz.lager != null and lagerplatz.lager.id == l.id}">
+                    </option>
+                </select>
+            </div>
+            <div class="feld">
+                <label>Bezeichnung</label>
+                <input type="text" th:field="*{bezeichnung}" placeholder="z.B. Regal A3" required />
+            </div>
 
-        <p>
-            <button type="submit">Speichern</button>
-            <a th:href="@{/lagerplatz}">Abbrechen</a>
-        </p>
-    </form>
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Speichern</button>
+                <a class="btn text" th:href="@{/lagerplatz}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
 </body>
 </html>

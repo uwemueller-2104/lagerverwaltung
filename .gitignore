@@ -1,5 +1,6 @@
 target/
 data/
+keystore.p12
 *.class
 .idea/
 *.iml

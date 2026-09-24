@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Schlanke, mobile-optimierte Ansicht: nur Anzeigen und Ein-/Ausbuchen,
+ * kein Bearbeiten von Stammdaten (das bleibt der Verwaltungs-GUI vorbehalten).
+ * Nutzt bewusst dieselben Services wie die Verwaltungs-GUI, nur mit
+ * schlankeren Templates. Barcode-/QR-Scan per Handykamera kommt als
+ * naechster Schritt oben drauf (siehe README).
+ */
 @Controller
 @RequestMapping("/mobil")
 public class MobileController {

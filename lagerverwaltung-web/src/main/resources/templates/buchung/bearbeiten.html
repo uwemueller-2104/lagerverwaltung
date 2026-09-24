@@ -3,51 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Buchung bearbeiten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1>Buchung bearbeiten</h1>
-    <p>Achtung: Diese Korrektur passt den Bestand <strong>nicht</strong> automatisch an –
-       nur für Tippfehler in Nebenfeldern gedacht, nicht zum Ändern der Menge.</p>
+    <div th:replace="~{fragments/nav :: nav('buchung')}"></div>
+    <main class="inhalt">
+        <h1>Buchung bearbeiten</h1>
+        <p class="meldung-fehler">Achtung: Diese Korrektur passt den Bestand <strong>nicht</strong> automatisch an –
+           nur für Tippfehler in Nebenfeldern gedacht, nicht zum Ändern der Menge.</p>
 
-    <form th:action="@{/buchung/{id}/speichern(id=${buchung.id})}" th:object="${buchung}" method="post">
+        <form class="formular" th:action="@{/buchung/{id}/speichern(id=${buchung.id})}" th:object="${buchung}" method="post">
 
-        <div>
-            <label>Typ</label><br/>
-            <select th:field="*{typ}" required>
-                <option th:each="t : ${typOptionen}" th:value="${t}" th:text="${t}"></option>
-            </select>
-        </div>
-        <div>
-            <label>Material</label><br/>
-            <select name="materialId" required>
-                <option th:each="m : ${materialOptionen}" th:value="${m.id}" th:text="${m.name}"
-                        th:selected="${buchung.material.id == m.id}"></option>
-            </select>
-        </div>
-        <div>
-            <label>Lagerplatz</label><br/>
-            <select name="lagerplatzId" required>
-                <option th:each="lp : ${lagerplatzOptionen}" th:value="${lp.id}"
-                        th:text="${lp.lager.name} + ' – ' + ${lp.bezeichnung}"
-                        th:selected="${buchung.lagerplatz.id == lp.id}"></option>
-            </select>
-        </div>
-        <div>
-            <label>Benutzer</label><br/>
-            <select name="benutzerId" required>
-                <option th:each="b : ${benutzerOptionen}" th:value="${b.id}" th:text="${b.anzeigename}"
-                        th:selected="${buchung.benutzer.id == b.id}"></option>
-            </select>
-        </div>
-        <div>
-            <label>Menge</label><br/>
-            <input type="number" step="0.01" th:field="*{menge}" required />
-        </div>
+            <div class="feld">
+                <label>Typ</label>
+                <select th:field="*{typ}" required>
+                    <option th:each="t : ${typOptionen}" th:value="${t}" th:text="${t}"></option>
+                </select>
+            </div>
+            <div class="feld">
+                <label>Material</label>
+                <select name="materialId" required>
+                    <option th:each="m : ${materialOptionen}" th:value="${m.id}" th:text="${m.name}"
+                            th:selected="${buchung.material.id == m.id}"></option>
+                </select>
+            </div>
+            <div class="feld">
+                <label>Lagerplatz</label>
+                <select name="lagerplatzId" required>
+                    <option th:each="lp : ${lagerplatzOptionen}" th:value="${lp.id}"
+                            th:text="${lp.lager.name} + ' – ' + ${lp.bezeichnung}"
+                            th:selected="${buchung.lagerplatz.id == lp.id}"></option>
+                </select>
+            </div>
+            <div class="feld">
+                <label>Benutzer</label>
+                <select name="benutzerId" required>
+                    <option th:each="b : ${benutzerOptionen}" th:value="${b.id}" th:text="${b.anzeigename}"
+                            th:selected="${buchung.benutzer.id == b.id}"></option>
+                </select>
+            </div>
+            <div class="feld">
+                <label>Menge</label>
+                <input type="number" step="0.01" th:field="*{menge}" required />
+            </div>
 
-        <p>
-            <button type="submit">Speichern</button>
-            <a th:href="@{/buchung}">Abbrechen</a>
-        </p>
-    </form>
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Speichern</button>
+                <a class="btn text" th:href="@{/buchung}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
 </body>
 </html>

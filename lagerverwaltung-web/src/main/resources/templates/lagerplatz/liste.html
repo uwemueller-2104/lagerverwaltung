@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Lagerplätze verwalten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <h1>Lagerplätze</h1>
+    <div th:replace="~{fragments/nav :: nav('lagerplatz')}"></div>
+    <main class="inhalt">
+        <h1>Lagerplätze</h1>
 
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Lager</th>
-                <th>Bezeichnung</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="lp : ${lagerplatzListe}">
-                <td th:text="${lp.lager.name}">Lager</td>
-                <td th:text="${lp.bezeichnung}">Bezeichnung</td>
-                <td>
-                    <a th:href="@{/lagerplatz/{id}/bearbeiten(id=${lp.id})}">Bearbeiten</a>
-                    <form th:action="@{/lagerplatz/{id}/loeschen(id=${lp.id})}" method="post" style="display:inline"
-                          onsubmit="return confirm('Lagerplatz wirklich löschen?');">
-                        <button type="submit">Löschen</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="tabelle">
+            <thead>
+                <tr>
+                    <th>Lager</th>
+                    <th>Bezeichnung</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="lp : ${lagerplatzListe}">
+                    <td th:text="${lp.lager.name}">Lager</td>
+                    <td th:text="${lp.bezeichnung}">Bezeichnung</td>
+                    <td class="aktionen">
+                        <a th:href="@{/lagerplatz/{id}/bearbeiten(id=${lp.id})}">Bearbeiten</a>
+                        <form th:action="@{/lagerplatz/{id}/loeschen(id=${lp.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Lagerplatz wirklich löschen?');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <p><a th:href="@{/lagerplatz/neu}">+ Neuen Lagerplatz anlegen</a></p>
-    <p><a th:href="@{/}">Zurück zur Startseite</a></p>
+        <div class="aktionsleiste">
+            <a class="btn" th:href="@{/lagerplatz/neu}">+ Neuen Lagerplatz anlegen</a>
+        </div>
+    </main>
 </body>
 </html>

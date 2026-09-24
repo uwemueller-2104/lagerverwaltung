@@ -1,18 +1,41 @@
-<title>Lager verwalten</title>
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lager verwalten</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
- </head>
- <body>
+</head>
+<body>
     <div th:replace="~{fragments/nav :: nav('lager')}"></div>
     <main class="inhalt">
         <h1>Lager</h1>
+
         <table class="tabelle">
-            <tr th:each="lager : ${lagerListe}">
-                <td th:text="${lager.name}">Name</td>
-                <td th:text="${lager.ort}">Ort</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Ort</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="lager : ${lagerListe}">
+                    <td data-label="Name" th:text="${lager.name}">Name</td>
+                    <td data-label="Ort" th:text="${lager.ort}">Ort</td>
+                    <td class="aktionen">
+                        <a th:href="@{/lager/{id}/bearbeiten(id=${lager.id})}">Bearbeiten</a>
+                        <form th:action="@{/lager/{id}/loeschen(id=${lager.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Lager wirklich löschen?');">
+                            <button type="submit" class="loeschen">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
         </table>
-        <a th:href="...">Bearbeiten</a>
+
         <div class="aktionsleiste">
             <a class="btn" th:href="@{/lager/neu}">+ Neues Lager anlegen</a>
         </div>
     </main>
+</body>
+</html>
