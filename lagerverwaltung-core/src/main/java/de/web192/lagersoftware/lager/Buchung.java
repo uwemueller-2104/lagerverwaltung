@@ -1,6 +1,7 @@
 package de.web192.lagersoftware.lager;
 
 import de.web192.lagersoftware.benutzer.Benutzer;
+import de.web192.lagersoftware.projekt.Projekt;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,11 @@ import java.time.LocalDateTime;
 /**
  * Eine Ein- oder Ausbuchung von Material an einem Lagerplatz, ausgeloest
  * durch einen Benutzer (typischerweise am Handy per Scan).
+ *
+ * "projekt" ist optional: allgemeine Lagerkorrekturen oder Einbuchungen ohne
+ * Projektbezug lassen es leer. Bei einer Ausbuchung zur Baustelle oder einer
+ * Einbuchung aus einem Lieferschein wird es gesetzt, damit sich spaeter Soll
+ * (aus dem Angebot) mit Ist (Summe der Buchungen) vergleichen laesst.
  */
 @Entity
 @Table(name = "buchung")
@@ -34,6 +40,10 @@ public class Buchung {
     @ManyToOne(optional = false)
     @JoinColumn(name = "benutzer_id", nullable = false)
     private Benutzer benutzer;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "projekt_id", nullable = true)
+    private Projekt projekt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

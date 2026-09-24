@@ -7,4 +7,6 @@ import java.util.List;
 public interface BuchungRepository extends JpaRepository<Buchung, Long> {
 
     List<Buchung> findByMaterialIdOrderByZeitpunktDesc(Long materialId);
+
+    List<Buchung> findByProjektId(Long projektId);
 }

@@ -1,6 +1,7 @@
 package de.web192.lagersoftware.lager;
 
 import de.web192.lagersoftware.benutzer.Benutzer;
+import de.web192.lagersoftware.projekt.Projekt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,11 @@ public class BestandService {
 
     @Transactional
     public void einbuchen(Material material, Lagerplatz lagerplatz, Benutzer benutzer, double menge) {
+        einbuchen(material, lagerplatz, benutzer, menge, null);
+    }
+
+    @Transactional
+    public void einbuchen(Material material, Lagerplatz lagerplatz, Benutzer benutzer, double menge, Projekt projekt) {
         pruefeMenge(menge);
 
         Bestand bestand = findeBestand(material, lagerplatz).orElseGet(() -> {
@@ -56,11 +62,16 @@ public class BestandService {
         bestand.setMenge(bestand.getMenge() + menge);
         bestandRepository.save(bestand);
 
-        protokolliere(material, lagerplatz, benutzer, menge, Buchung.BuchungsTyp.EINBUCHUNG);
+        protokolliere(material, lagerplatz, benutzer, projekt, menge, Buchung.BuchungsTyp.EINBUCHUNG);
     }
 
     @Transactional
     public void ausbuchen(Material material, Lagerplatz lagerplatz, Benutzer benutzer, double menge) {
+        ausbuchen(material, lagerplatz, benutzer, menge, null);
+    }
+
+    @Transactional
+    public void ausbuchen(Material material, Lagerplatz lagerplatz, Benutzer benutzer, double menge, Projekt projekt) {
         pruefeMenge(menge);
 
         Bestand bestand = findeBestand(material, lagerplatz)
@@ -76,19 +87,20 @@ public class BestandService {
         bestand.setMenge(bestand.getMenge() - menge);
         bestandRepository.save(bestand);
 
-        protokolliere(material, lagerplatz, benutzer, menge, Buchung.BuchungsTyp.AUSBUCHUNG);
+        protokolliere(material, lagerplatz, benutzer, projekt, menge, Buchung.BuchungsTyp.AUSBUCHUNG);
     }
 
     private java.util.Optional<Bestand> findeBestand(Material material, Lagerplatz lagerplatz) {
         return bestandRepository.findByMaterialIdAndLagerplatzId(material.getId(), lagerplatz.getId());
     }
 
-    private void protokolliere(Material material, Lagerplatz lagerplatz, Benutzer benutzer,
+    private void protokolliere(Material material, Lagerplatz lagerplatz, Benutzer benutzer, Projekt projekt,
                                 double menge, Buchung.BuchungsTyp typ) {
         Buchung buchung = new Buchung();
         buchung.setMaterial(material);
         buchung.setLagerplatz(lagerplatz);
         buchung.setBenutzer(benutzer);
+        buchung.setProjekt(projekt);
         buchung.setMenge(menge);
         buchung.setTyp(typ);
         buchungRepository.save(buchung);
