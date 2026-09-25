@@ -66,9 +66,8 @@ Schema und legt es dann selbst per `V1__initial_schema.sql` neu an;
 
 ## Login
 
-Die Anwendung verlangt jetzt eine Anmeldung (Spring Security, Formular-Login
-unter `/login`). Es gibt noch keine eigene Benutzerverwaltungs-Oberfläche –
-Benutzer landen bisher nur über `TestdatenInitializer` in der Datenbank.
+Die Anwendung verlangt eine Anmeldung (Spring Security, Formular-Login unter
+`/login`). Benutzer legt man unter `/benutzer` an (nur für ADMIN sichtbar).
 Zwei Beispiel-Logins stehen nach dem ersten Start zur Verfügung:
 
 | Benutzername | Passwort      | Rolle       |
@@ -77,18 +76,34 @@ Zwei Beispiel-Logins stehen nach dem ersten Start zur Verfügung:
 | `monteur1`   | `monteur123`  | MITARBEITER |
 
 **Nur zum Ausprobieren auf dem eigenen Rechner** – vor einem echten Einsatz
-unbedingt eigene Zugangsdaten setzen (z. B. direkt in der H2-Konsole den
-`passwort_hash` durch einen selbst erzeugten BCrypt-Hash ersetzen, oder eine
-kleine Admin-Seite zum Anlegen/Ändern von Benutzern nachziehen).
+unbedingt eigene Zugangsdaten setzen (unter `/benutzer` ein neues Passwort
+für `admin` vergeben, oder gleich einen eigenen Admin-Benutzer anlegen und
+die Beispiel-Logins deaktivieren).
 
 Rollen und Rechte (siehe `Rolle.java`):
 - **ADMIN**: darf zusätzlich Stammdaten bearbeiten – Lager, Lagerplätze,
-  Material, Projekte, Angebote, Lieferscheine.
+  Material, Projekte, Angebote, Lieferscheine – und Benutzer verwalten
+  (`/benutzer`): anlegen, Rolle/Passwort ändern, de-/aktivieren.
 - **MITARBEITER**: darf alles ansehen sowie Bestand ein-/ausbuchen
   (Verwaltungs-GUI und mobile Ansicht), aber keine Stammdaten anlegen oder
   ändern. Ruft er/sie trotzdem eine Stammdaten-Seite auf, kommt eine
   403-Fehlerseite; die entsprechenden Menüpunkte sind für MITARBEITER
   in der Navigation deshalb von vornherein ausgeblendet.
+
+Benutzer werden nie gelöscht, nur deaktiviert (De-/Aktivieren-Button in der
+Liste) – sie stecken als Fremdschlüssel in Buchungen und Lieferscheinen
+("wer hat das gebucht/angenommen?"), ein Löschen würde entweder an der
+Datenbank scheitern oder Historie zerstören. Ein deaktivierter Benutzer kann
+sich nicht mehr einloggen. Man kann sich nicht selbst deaktivieren.
+
+**Einmalig nach dem Update auf den Login:** Falls bei dir schon eine
+`lagerverwaltung-web/data/`-Datenbank von vor dieser Änderung existiert,
+hat `admin`/`monteur1` noch das alte Platzhalter-Passwort ohne echten
+Hash – der Login schlägt dann mit "Benutzername oder Passwort ist falsch"
+fehl, obwohl die Zugangsdaten stimmen. Abhilfe: Ordner `data/` einmal löschen
+und neu starten (siehe oben, gleiches Prinzip wie beim Flyway-Update), dann
+legt `TestdatenInitializer` `admin`/`monteur1` mit echten BCrypt-Hashes neu
+an. Alternativ ab jetzt: den Hash direkt über `/benutzer` neu setzen.
 
 **Geplant, noch nicht umgesetzt:** Microsoft Entra ID (OIDC) als zweite
 Login-Möglichkeit neben dem lokalen Login. Der lokale Login bleibt dabei
@@ -170,5 +185,5 @@ Projekt-Setup steht: Module, Entities, Repositories. Als naechstes gemeinsam:
 - [ ] Unit-Tests für `LieferscheinService.anlegen(...)` (löst Einbuchung mit Projektbezug aus)
 - [ ] Mobile Ausbuchung um optionale Projekt-Zuordnung erweitern (Baustelle wählen)
 - [x] Lokaler Login (Benutzername/Passwort) mit rollenbasierter Zugriffssteuerung (Spring Security, BCrypt, siehe Abschnitt "Login")
-- [ ] Eigene Oberfläche zum Anlegen/Bearbeiten von Benutzern (bisher nur über `TestdatenInitializer`)
+- [x] Eigene Oberfläche zum Anlegen/Bearbeiten von Benutzern und Rollen (`/benutzer`, nur ADMIN; De-/Aktivieren statt Löschen)
 - [ ] Microsoft Entra ID (OIDC) als zweite Login-Möglichkeit neben dem lokalen Login (lokaler Login bleibt als Fallback, Rollenzuweisung weiterhin manuell in der App, Single-Tenant – siehe Chat-Verlauf für die Skizze)

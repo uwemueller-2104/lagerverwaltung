@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${benutzer.id} != null ? 'Benutzer bearbeiten' : 'Neuer Benutzer'">Benutzer</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('benutzer')}"></div>
+    <main class="inhalt">
+        <h1 th:text="${benutzer.id} != null ? 'Benutzer bearbeiten' : 'Neuer Benutzer'">Benutzer</h1>
+
+        <p th:if="${fehler}" th:text="${fehler}" class="meldung-fehler"></p>
+
+        <form class="formular" th:action="@{/benutzer/speichern}" method="post">
+            <input type="hidden" name="id" th:value="${benutzer.id}" />
+
+            <div class="feld">
+                <label>Benutzername</label>
+                <input type="text" name="benutzername" th:value="${benutzer.benutzername}" required autofocus />
+            </div>
+            <div class="feld">
+                <label>Anzeigename</label>
+                <input type="text" name="anzeigename" th:value="${benutzer.anzeigename}" required />
+            </div>
+            <div class="feld">
+                <label>Rolle</label>
+                <select name="rolle" required>
+                    <option th:each="r : ${rolleOptionen}" th:value="${r}" th:text="${r}"
+                            th:selected="${r == benutzer.rolle}"></option>
+                </select>
+            </div>
+            <div class="feld">
+                <label th:text="${benutzer.id} != null ? 'Neues Passwort (leer lassen, um das aktuelle zu behalten)' : 'Passwort'">Passwort</label>
+                <input type="password" name="neuesPasswort" th:required="${benutzer.id} == null" autocomplete="new-password" />
+            </div>
+
+            <div class="aktionsleiste">
+                <button type="submit" class="btn">Speichern</button>
+                <a class="btn text" th:href="@{/benutzer}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

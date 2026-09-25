@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Benutzer verwalten</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: nav('benutzer')}"></div>
+    <main class="inhalt">
+        <h1>Benutzer</h1>
+
+        <p th:if="${fehler}" th:text="${fehler}" class="meldung-fehler"></p>
+
+        <table class="tabelle">
+            <thead>
+                <tr>
+                    <th>Benutzername</th>
+                    <th>Anzeigename</th>
+                    <th>Rolle</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="b : ${benutzerListe}">
+                    <td data-label="Benutzername" th:text="${b.benutzername}">admin</td>
+                    <td data-label="Anzeigename" th:text="${b.anzeigename}">Admin</td>
+                    <td data-label="Rolle" th:text="${b.rolle}">ADMIN</td>
+                    <td data-label="Status" th:text="${b.aktiv} ? 'Aktiv' : 'Deaktiviert'">Aktiv</td>
+                    <td class="aktionen">
+                        <a th:href="@{/benutzer/{id}/bearbeiten(id=${b.id})}">Bearbeiten</a>
+                        <form th:if="${b.aktiv}" th:action="@{/benutzer/{id}/deaktivieren(id=${b.id})}" method="post"
+                              style="display:inline" onsubmit="return confirm('Diesen Benutzer deaktivieren? Er/sie kann sich danach nicht mehr anmelden.');">
+                            <button type="submit" class="loeschen">Deaktivieren</button>
+                        </form>
+                        <form th:unless="${b.aktiv}" th:action="@{/benutzer/{id}/aktivieren(id=${b.id})}" method="post"
+                              style="display:inline">
+                            <button type="submit">Aktivieren</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="aktionsleiste">
+            <a class="btn" th:href="@{/benutzer/neu}">+ Neuen Benutzer anlegen</a>
+        </div>
+    </main>
+</body>
+</html>

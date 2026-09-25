@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  * Rollen (siehe {@link de.web192.lagersoftware.benutzer.Rolle}):
  * - ADMIN: darf Stammdaten bearbeiten (Lager, Lagerplaetze, Material,
- *   Projekte, Angebote, Lieferscheine).
+ *   Projekte, Angebote, Lieferscheine) und Benutzer verwalten.
  * - MITARBEITER: darf alles ansehen sowie Bestand ein-/ausbuchen
  *   (Verwaltungs-GUI und mobile Ansicht), aber keine Stammdaten anlegen
  *   oder aendern.
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/h2-console/**", "/api/health").permitAll()
                         .requestMatchers("/lager/**", "/lagerplatz/**", "/material/**",
-                                "/projekt/**", "/angebot/**", "/lieferschein/**").hasRole("ADMIN")
+                                "/projekt/**", "/angebot/**", "/lieferschein/**", "/benutzer/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
