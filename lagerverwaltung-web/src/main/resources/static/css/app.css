@@ -199,6 +199,7 @@ form.formular label {
 form.formular input[type="text"],
 form.formular input[type="number"],
 form.formular input[type="date"],
+form.formular input[type="password"],
 form.formular select,
 form.formular textarea {
     width: 100%;

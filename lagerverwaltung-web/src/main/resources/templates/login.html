@@ -22,17 +22,29 @@
             margin-top: 0;
             text-align: center;
         }
+        /* Das Logo enthaelt weiße Buchstaben (fuer den dunklen Nav-Hintergrund
+           gedacht) - auf der weißen Login-Karte braucht es deshalb selbst
+           einen dunklen Hintergrund, sonst verschwindet der weiße Teil. */
+        .login-logo-chip {
+            display: flex;
+            justify-content: center;
+            background: var(--akzent-2);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
         .login-logo {
             display: block;
-            height: 48px;
+            height: 40px;
             width: auto;
-            margin: 0 auto 12px;
         }
     </style>
 </head>
 <body class="login-seite">
     <div class="karte login-karte">
-        <img class="login-logo" th:src="@{/img/logo.png}" alt="Logo" />
+        <div class="login-logo-chip">
+            <img class="login-logo" th:src="@{/img/logo.png}" alt="Logo" />
+        </div>
         <h1>Lagersoftware</h1>
 
         <p class="meldung-fehler" th:if="${param.error}">
