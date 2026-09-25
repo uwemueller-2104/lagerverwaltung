@@ -22,10 +22,17 @@
             margin-top: 0;
             text-align: center;
         }
+        .login-logo {
+            display: block;
+            height: 48px;
+            width: auto;
+            margin: 0 auto 12px;
+        }
     </style>
 </head>
 <body class="login-seite">
     <div class="karte login-karte">
+        <img class="login-logo" th:src="@{/img/logo.png}" alt="Logo" />
         <h1>Lagersoftware</h1>
 
         <p class="meldung-fehler" th:if="${param.error}">

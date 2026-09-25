@@ -12,7 +12,10 @@
       einer 403-Seite fuehren.
     -->
     <nav class="top-nav" th:fragment="nav(aktiv)">
-        <a class="marke" th:href="@{/}">Lagersoftware</a>
+        <a class="marke" th:href="@{/}">
+            <img th:src="@{/img/logo.png}" alt="Logo" />
+            <span>Lagersoftware</span>
+        </a>
 
         <!-- Reiner CSS-Hamburger (kein JS): Checkbox steuert per :checked, ob
              .nav-links sichtbar ist - siehe Media-Query in app.css. -->

@@ -12,9 +12,10 @@
     --muted: #847E71;
     --border: #DCD6C9;
 
-    --akzent: #C97A2B;       /* primaer: Buchen, Speichern, wichtige Aktionen */
-    --akzent-dunkel: #A9611B;
-    --akzent-2: #57524A;     /* sekundaer: Bestand ansehen, Abbrechen */
+    /* Gruen aus dem Logo (#60C340) uebernommen. */
+    --akzent: #5FBB3F;       /* primaer: Buchen, Speichern, wichtige Aktionen */
+    --akzent-dunkel: #499130;
+    --akzent-2: #2B3A26;     /* sekundaer + Nav-Hintergrund: dunkles Tannengruen */
 
     --erfolg-bg: #DCE7D8;
     --erfolg-text: #3D6B36;
@@ -61,11 +62,20 @@ a {
 }
 
 .top-nav .marke {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: white;
     font-weight: 700;
     font-size: 17px;
-    padding: 14px 20px 14px 0;
+    padding: 10px 20px 10px 0;
     text-decoration: none;
+}
+
+.top-nav .marke img {
+    height: 32px;
+    width: auto;
+    display: block;
 }
 
 .top-nav a.link {
